@@ -6,6 +6,7 @@
 #include <string>
 #include <regex>
 
+// REVIEW: Complete review of use of fidentifiers.
 namespace fspace // fidentifier, type_id and fnode_id
 {
     class fidentifier : public pseudoshared<std::string>

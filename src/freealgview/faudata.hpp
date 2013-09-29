@@ -7,6 +7,7 @@
 
 namespace freealgview // fauData, fauFunctor, fauString
 {
+    // REVIEW: It is fauData really necessary?
     template<class Derived>
     class fauData
     {
@@ -109,13 +110,7 @@ namespace freealgview // fauData, fauFunctor, fauString
 
 } // freealgview
 
-/*
-inline freealgview::fauString operator"" _s(char const * const str, size_t len)
-{
-    return freealgview::fauString(str, len);
-}
-*/
-
+// TODO: Generalizating debuggers.
 #include "debugger/debugger.hpp"
 #include "simple_debugger/simple_debugger.hpp"
 

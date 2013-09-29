@@ -4,6 +4,7 @@
 
 #include "faupp/faupp.hpp"
 
+// TODO: Generalizating debuggers.
 #include "graphic_debugger/graphic_debugger.hpp"
 
 namespace freealgview // FreeAlgView
@@ -27,151 +28,6 @@ namespace freealgview // FreeAlgView
         bool operator()() override;
     };
 
-    /*
-    // Makers
-    class MakeField : fauCall
-    {
-    public:
-        fspace::fnode operator()(fspace::fnode_id id)
-        {
-            return fspace::fnode(id);
-        }
-
-        fspace::fnode operator()(fspace::type_id t)
-        {
-            return fspace::fnode(t);
-        }
-
-        fspace::fnode operator()(fspace::fnode_id id, fspace::type_id t)
-        {
-            return call<MakeField>(t) << id;
-        }
-
-        fspace::fnode operator()(fspace::fnode father,
-                                 fspace::fnode_id id, fspace::type_id t)
-        {
-            auto l_new = call<MakeField>(id, t);
-
-            father << l_new;
-
-            return l_new;
-        }
-
-        fspace::fnode operator()(fspace::fnode father, fspace::fnode_id id)
-        {
-            auto l_new = call<MakeField>(id);
-
-            father << l_new;
-
-            return l_new;
-        }
-    };
-
-    class MakeNil : fauCall
-    {
-    public:
-        fspace::fnode operator()()
-        {
-            return call<MakeField>("nil"_t);
-        }
-
-        fspace::fnode operator()(fspace::fnode_id id)
-        {
-            return call<MakeNil>() << id;
-        }
-
-        fspace::fnode operator()(fspace::fnode father, fspace::fnode_id id)
-        {
-            auto l_new = call<MakeNil>(id);
-
-            father << l_new;
-
-            return l_new;
-        }
-    };
-
-    class MakeStack : fauCall
-    {
-    public:
-        fspace::fnode operator()()
-        {
-            return call<MakeField>("stack"_t);
-        }
-
-        fspace::fnode operator()(fspace::fnode_id id)
-        {
-            return call<MakeStack>() << id;
-        }
-
-        fspace::fnode operator()(fspace::fnode father, fspace::fnode_id id)
-        {
-            auto l_new = call<MakeStack>(id);
-
-            father << l_new;
-
-            return l_new;
-        }
-    };
-
-    class MakeRef : fauCall
-    {
-    public:
-        fspace::fnode operator()(fspace::fnode ref)
-        {
-            auto l_ref = call<MakeField>("ref"_t);
-
-            l_ref << ~ref;
-
-            return l_ref;
-        }
-
-        fspace::fnode operator()(fspace::fnode_id id, fspace::fnode ref)
-        {
-            return call<MakeRef>(ref) << id;
-        }
-
-        fspace::fnode operator()(fspace::fnode father,
-                                 fspace::fnode_id id, fspace::fnode ref)
-        {
-            auto l_new = call<MakeRef>(id, ref);
-
-            father << l_new;
-
-            return l_new;
-        }
-    };
-
-    class MakeScript : fauCall
-    {
-    public:
-        fspace::fnode operator()(fspace::fnode contents)
-        {
-            auto l_script = call<MakeField>("script"_t);
-
-            call<MakeRef>(l_script, "contents"_f, contents);
-            call<MakeField>(l_script, "pc"_f, "0"_t);
-
-            return l_script;
-        }
-
-        fspace::fnode operator()(fspace::fnode_id id, fspace::fnode contents)
-        {
-            return call<MakeScript>(contents) << id;
-        }
-
-        fspace::fnode operator()(fspace::fnode father,
-                                 fspace::fnode_id id, fspace::fnode contents)
-        {
-            auto l_new = call<MakeScript>(id, contents);
-
-            father << l_new;
-
-            return l_new;
-        }
-    };
-    */
-
-    // Stack operations
     class StackTop : fauCall
     {
     public:
@@ -468,24 +324,7 @@ namespace freealgview // FreeAlgView
         }
     };
 
-    /*
-    // Basic operations
-
-    class Deref : fauCall
-    {
-    public:
-        fspace::fnode operator()(fspace::fnode node)
-        {
-            if (node.type() != "ref"_t)
-                return futil::nil;
-
-            return *node;
-        }
-    };
-    */
-
     // Implements the 'next' function for the machine type.
-
     class Machine : fauCall
     {
     private:
@@ -750,18 +589,11 @@ namespace freealgview // FreeAlgView
     public:
         void operator()(fspace::fnode code)
         {
-            // REVIEW: But completely. Property system too chaotic.
-
             if (!code)
                 return;
 
             // NOTE: Now, we have restrictions only for assignments.
             // Propagating forced and lvalue marks.
-
-            // NOTE: Pending:
-            // #!lassign #!oassign #!base_call #!call #!ref
-            // #!return
-            // Perhaps innecesary: #!symbol #!mark #!param
             if (code == "#!list"_f) {
                 call<SemanticRestrictions>(*code["car"_f]);
                 call<SemanticRestrictions>(*code["cdr"_f]);
@@ -1139,138 +971,13 @@ namespace freealgview // FreeAlgView
         }
     };
 
-    // Implements the 'eval' function for the script type.
-    // class ScriptEval : fauCall
-    // {
-    // public:
-    //     void operator()(fspace::fnode script);
-    // };
-
-    // class CallEval : fauCall
-    // {
-    // public:
-    //     void operator()(fspace::fnode callable)
-    //     {
-    //         if (callable == "#!"_f)
-    //             call<ScriptEval>(callable);
-    //     }
-    // };
-
-    /*
-    class Return : fauCall
-    {
-    public:
-        void operator()(fspace::fnode owner, fspace::fnode out)
-        {
-            auto l_out = owner["#!out"_f];
-
-            if (!l_out)
-                l_out = call<MakeField>(owner, "#!out"_f);
-
-            out >> l_out;
-        }
-    };
-
-    class Out : fauCall
-    {
-    public:
-        fspace::fnode operator()(fspace::fnode node)
-        {
-            return node["#!out"_f];
-        }
-    };
-
-    class Pass : fauCall
-    {
-    public:
-        void operator()(fspace::fnode source, fspace::fnode target)
-        {
-            // NOOP. To define in the future.
-        }
-    };
-
-    class Translate : fauCall
-    {
-    public:
-        fspace::fnode operator()(fspace::fnode sharp)
-        {
-            if (sharp.type() == "#!script"_t)
-                return call<MakeScript>(sharp);
-            else
-                return call<MakeNil>();
-        }
-    };
-
-    class ReturnScript : fauCall
-    {
-    public:
-        void operator()(fspace::fnode script, fspace::fnode_id id)
-        {
-            if (script.type() != "script"_t)
-                return;
-
-            auto l_out =
-                call<Translate>(call<Deref>(script["contents"_f])[id]);
-
-            call<Return>(script, l_out);
-        }
-    };
-    */
-    // TODO: The general idea to be finally implemented is to create a language
-    // for defining grammars and actions that will be transform to function
-    // objets. The general process would be as following:
-    //
-    //    1 The system reads a file wrote in that core grammar with any other
-    //    user grammars and associated semantic actions.
-    //
-    //    2 After grammars, the file describes also the main loop of the
-    //    application.
-    //
-    //    3 The system creates for each grammar a function object that
-    //    represents a parser for him, and an additional function object that
-    //    represents the main script of the application, called for example the
-    //    "init object".
-    //
-    //    4 The system executes that init object.
-    //
-    //    5 That init object will mainly contain a serie of instructions saying
-    //    that the system should parser any other files wrote in that user
-    //    grammars.
-    //
-    //    6 The system will execute the semantic actions associated with each
-    //    grammar node as the user file is read.
-    //
-    //    7 The init object could indicate upon this a main loop, or perhaps the
-    //    "main loop" is propagated among the semantic actions of the grammars,
-    //    executed as the user files are read.
-
-    // NOTE: The following lines represents more or less the instructions of
-    // that init object.
-
     bool FreeAlgView::operator()()
     {
-        // 'fau' is our node cloud. Here we save, as henfo objects, the
-        // differents grammars and the others objects created by the
-        // semantic actions of the user grammars. 'fau' is the root node of
-        // the cloud.
-
-        // We create the root tree. All parsers will be henfos of that node, and
-        // that object as a henfo itself, in order to save all objects in the
-        // cloud (if all nodes are in the cloud, that's very comfortable to
-        // debugging purposes).
         fspace::fnode fau = fspace::fcloud(class_id());
 
         fau << *this;
 
-        // The system reads the initial file and creates the initial object,
-        // represented here through the class 'fauInit' (the function
-        // 'fauInit::operator()()' represents the contents of that file).
-
-        // A functor fauInit is created to add to the tree as a henfo. In the
-        // following line that object is extracted and the owner is correctly
-        // initialized. From now on the object can to know things about the tree
-        // since the tree is its owner.
-
+        // 'init' controls the execution process.
         fauInit init;
         fau << init;
 
@@ -1279,34 +986,23 @@ namespace freealgview // FreeAlgView
 
     bool fauInit::operator()()
     {
-        // That assumed file could define one or more grammars. We
-        // pre-implement here only one grammar (faupp).
+        // REVIEW: Faupp::class_id? Use of identifiers in general must be
+        // changed.
         fspace::fnode faupp(Faupp::class_id(), "machine"_t);
+
+        owner() << faupp;
 
         // FIXME: Faupp can't be moved and being copied isn't safe. bisonc++ is
         // the culprit, and not I :P.
-        // owner() << (faupp << Faupp());
-        owner() << faupp;
-
+        // owner() << (faupp << Faupp(...));
         Faupp parser;
 
         parser.owner(faupp);
 
-        // Our assumed file wants to parser other file wrote in
-        // the language faupp. We get the parser and we parser that file
-        // against it.
-        fauString file_name(
-            "/home/peregring-lk/Proyectos/"
-            "FreeAlgView/FreeAlgView/"
-            "src/.branch3/"
-            ".finit");
+        // Start-up file.
+        fauString file_name(".finit");
 
         faupp << file_name;
-
-        // The semantic actions of that user grammar creates different
-        // nodes. The nodes created for each grammar is saved as children of
-        // its associated root node. Go to FreeAlgView/faupp to see the
-        // grammar's semantic actions.
 
         // TODO: Protocol about informing errors to the user.
         if (not parser()) {
@@ -1315,19 +1011,10 @@ namespace freealgview // FreeAlgView
         }
 
         // install debugger
-        // GraphicDebugger has not move constructor.
+        // NOTE: GraphicDebugger has not move constructor.
         Debugger d;
 
         owner() << d;
-
-        /*
-        // Initializating the machine.
-        auto xtack = call<MakeStack>(faupp, "#!xtack"_f);
-
-        call<StackPush>(xtack, call<MakeRef>(faupp.father()));
-        call<StackPush>(xtack, call<MakeRef>(faupp));
-        call<StackPush>(xtack, call<Translate>(faupp["#!code"_f]));
-        */
 
         // REVIEW: Debugging.
 
@@ -1337,7 +1024,6 @@ namespace freealgview // FreeAlgView
         // Debugger& d = owner()[Debugger::class_hid()];
 
         // main loop
-
         auto machine = *faupp;
         auto code = *machine["code"_f];
 
@@ -1388,19 +1074,5 @@ namespace freealgview // FreeAlgView
 
         return true;
     }
-
-    /*
-    void ScriptEval::operator()(fspace::fnode script)
-    {
-        auto pc = script["pc"_f];
-
-        if (pc.type() == "0"_t)
-            call<ReturnScript>(script, "car"_f);
-        else if (pc.type() == "1"_t)
-            call<ReturnScript>(script, "cdr"_f);
-
-        call<Increment>(pc);
-    }
-    */
 
 } // FreeAlgView
