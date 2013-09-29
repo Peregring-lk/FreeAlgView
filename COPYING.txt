@@ -1,0 +1,67 @@
+# LICENSE.txt
+
+# Copyright notice:
+# Copyright (C) 2012 Aarón Bueno Villares
+
+# Source package notice:
+# This file is part of FreeAlgView. You can get this package in zip and tar.gz
+# formats from the next url:
+#
+#  - https://github.com/Peregring-lk/FreeAlgView/downloads
+
+# License notice:
+# FreeAlgView is made available under the terms of the GNU General Public
+# License as published by the Free Software Fundation, either version 3 of the
+# license, or (at your option) any later version.
+#
+# FreeAlgView is distributed in the hope that it will be useful, but WITHOUT ANY
+# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+# A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along with
+# FreeAlgView. If not, see in the next url:
+#
+#  - http://www.gnu.org/licenses/gpl.html
+#
+# See also the LICENSE.txt file at the top-level directory of this package or in
+# the next url:
+#
+#  - https://github.com/Peregring-lk/FreeAlgView/blob/master/LICENSE.txt
+
+LICENSE:
+        FreeAlgView License
+    ===========================
+
+FreeAlgView is made available under the terms of the GNU General Public
+License as published by the Free Software Fundation, either version 3 of the
+license, or (at your option) any later version.
+
+FreeAlgView is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+Some files could use code copyrighted by other authors under other
+(GPL-compatible) licenses. You should have received a copy of the GNU
+General Public License and the remaining licenses along with
+FreeAlgView, probably inside a folder called "licenses". If not, you
+can get the original complete package in zip and tar.gz formats from
+the next url:
+
+   - https://github.com/Peregring-lk/FreeAlgView/downloads
+
+and in the "licenses" folder of this package you can find these copies. You can
+also browse this "licenses" folder from the next url:
+
+  - https://github.com/Peregring-lk/FreeAlgView/blob/licenses
+
+The included licenses are:
+
+   - GNU General Public License (version 3)  - the FreeAlgView license
+
+You can get a copy of each one of this licenses, respectively, in the next
+files/urls:
+
+  GNU General Public License
+   - licenses/GPL-3.txt
+   - http://www.gnu.org/licenses/gpl-3.0.html
+   - http://www.gnu.org/licenses/gpl.html (for the last version).
