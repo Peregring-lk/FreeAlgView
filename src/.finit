@@ -1,0 +1,43 @@
+/*int sqrtMeso.a(b, c).b <- @ number (number n, number aprox)
+{
+    match <- n / aprox;
+
+    while (|aprox - match| > 0.0001) {
+       aprox <- (aprox + match) / 2;
+       match <- n / aprox;
+    };
+
+    return aprox;
+};
+
+sqrtMeso(25, 500);
+sqrtMeso(20, 20);
+
+a <- 3;
+
+a <- @other(number n){};
+
+int b <- 4;
+
+int <- {};
+reg <- #[ >int; ];*/
+
+// a;
+
+number a;
+
+number a <- b;
+
+=> a.b;
+
+// => a <- b;
+// => number a;
+
+// => a.b;
+
+// number a.b;
+// number a.b <- c;
+
+// => a.b;
+// => a.b <- c;
+// => number a.b <- c;
