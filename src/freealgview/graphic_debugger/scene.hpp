@@ -30,8 +30,6 @@
 #ifndef FREEALGVIEW_SCENE_HPP_INCLUDED
 #define FREEALGVIEW_SCENE_HPP_INCLUDED
 
-#include "../faudata.hpp"
-
 #include <vector>
 
 #include <GL/gl.h>

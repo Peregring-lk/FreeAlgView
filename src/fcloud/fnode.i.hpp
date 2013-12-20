@@ -10,18 +10,13 @@ namespace fspace // i_fnode
     public: // structors
         i_fnode() = default;
 
-        explicit i_fnode(type_id const& type)
-            : m_type(type)
-        {}
-
-        explicit i_fnode(fnode_id const& id, type_id const type = futil::nil)
-            : m_id(id), m_type(type)
+        explicit i_fnode(fnode_id const& id)
+            : m_id(id)
         {}
 
         i_fnode(i_fnode const& he)
             : m_father(he.m_father),
               m_ref(he.m_ref),
-              m_type(he.m_type),
               m_id(he.m_id),
               m_children(he.m_children)
               // m_henfo excluded.
@@ -40,7 +35,6 @@ namespace fspace // i_fnode
 
         fnode m_father = futil::nil;
         fnode m_ref = futil::nil;
-        type_id m_type = futil::nil;
         fnode_id m_id = futil::nil;
 
         henfo_map m_henfo;
@@ -100,7 +94,7 @@ namespace fspace // fnode
 
     inline void fnode::view_all() const
     {
-        std::cout << std::endl << "ID: " << id() << ", " << "TYPE: " << type()
+        std::cout << std::endl << "ID: " << id() << ", "
                   << " Degree: " << degree() << " " << std::endl;
 
         for (auto const& i : mf_children())
@@ -110,14 +104,6 @@ namespace fspace // fnode
     inline fset fnode::travel() const
     {
         return set().reproduce();
-    }
-
-    inline type_id fnode::type() const
-    {
-        if (!*this)
-            return futil::nil;
-        else
-            return mf_type();
     }
 
     inline fnode_id fnode::id() const
@@ -189,11 +175,6 @@ namespace fspace // fnode
         return mf_find(id);
     }
 
-    // inline henfo& fnode::get(henfo_id const& id) const
-    // {
-    //     return mf_find(id);
-    // }
-
     template<typename T>
     inline T& fnode::get() const
     {
@@ -226,11 +207,6 @@ namespace fspace // fnode
         return mf_find(id);
     }
 
-    // inline bool fnode::exists(henfo_id const& id) const
-    // {
-    //     return mf_find(id);
-    // }
-
     template<typename T>
     inline bool fnode::exists() const
     {
@@ -255,16 +231,6 @@ namespace fspace // fnode
             return mf_children().empty();
     }
 
-    inline bool fnode::typed() const
-    {
-        return type();
-    }
-
-    inline bool fnode::untyped() const
-    {
-        return !typed();
-    }
-
     inline bool fnode::identified() const
     {
         return !anonymous();
@@ -281,11 +247,6 @@ namespace fspace // fnode
     }
 
     // operators
-    // inline henfo& fnode::operator[](henfo_id const& id) const
-    // {
-    //     return get(id);
-    // }
-
     template<typename T, class>
     inline fnode::operator T&() const
     {
@@ -347,13 +308,6 @@ namespace fspace // fnode
         return *this;
     }
 
-    inline fnode& fnode::operator<<(type_id const& id)
-    {
-        type(id);
-
-        return *this;
-    }
-
     inline fnode& fnode::operator<<(bleach_tp const& bleacher)
     {
         *this = fnode("@@@fnode::operator<<"_f);
@@ -385,14 +339,6 @@ namespace fspace // fnode
         return this->id() == id;
     }
 
-    inline bool fnode::operator==(type_id const& type) const
-    {
-        if (!*this)
-            return false;
-
-        return this->type() == type;
-    }
-
     inline bool fnode::operator==(fnode const& he) const
     {
         return base_tp::operator==(he);
@@ -403,24 +349,12 @@ namespace fspace // fnode
         return !this->operator==(id);
     }
 
-    inline bool fnode::operator!=(type_id const& type) const
-    {
-        return !this->operator==(type);
-    }
-
     inline bool fnode::operator!=(fnode const& he) const
     {
         return !this->operator==(he);
     }
 
     // setters
-    inline void fnode::type(type_id const& id)
-    {
-        mf_ensure_node("@@@fnode::type@@@"_f);
-
-        mf_type() = id;
-    }
-
     inline void fnode::father(fnode const& node)
     {
         mf_ensure_node("@@@fnode::father@@@"_f);
@@ -471,33 +405,56 @@ namespace fspace // fnode
         }
     }
 
-    inline void fnode::tydentify()
-    {
-        id(static_cast<fnode_id>(type()));
-    }
-
     inline void fnode::add(fnode he)
     {
-        if (!he)
+        if (!he or he.anonymous())
             return;
 
-        if (he.anonymous())
-            he.tydentify();
-
-        // If the node remains being anonymous (type empty), fnode::father calls
-        // to "mf_ensure_node".
         he.father(*this);
+    }
+
+    // REVIEW: Send SFINAE to a more appropiate place.
+    struct upload_owner_helper {
+
+        template<typename>
+        struct helper;
+
+        template<typename T>
+        static void check_helper
+        (T& t, fnode n, typename
+         std::enable_if<
+         std::is_same<void, decltype(t.owner(std::declval<fnode>()))>::value and
+         std::is_same<fnode, decltype(t.owner())>::value, nullptr_t>::type)
+        {
+            if (t.owner())
+                t.owner().fnode::erase<T>();
+
+            t.owner(n);
+        }
+
+        template<typename T>
+        static void check_helper(T& t, fnode n, ...)
+        {}
+
+        template<typename T>
+        static void check(T& t, fnode n)
+        {
+            check_helper<T>(t, n, nullptr);
+        }
+    };
+
+    template<typename T>
+    void upload_owner(T& t, fnode n)
+    {
+        upload_owner_helper::check(t, n);
     }
 
     template<typename T, class>
     inline void fnode::add(T&& t)
     {
-        if (t.owner())
-            t.owner().erase<T>();
+        upload_owner(t, *this);
 
-        t.owner(*this);
-
-        fspace::henfo henfo(t);
+        fspace::henfo henfo(std::forward<T>(t));
 
         mf_henfo().insert(henfo_map::value_type(futil::stypeid<T>(), henfo));
     }
@@ -506,11 +463,6 @@ namespace fspace // fnode
     {
         get(id).father(futil::nil);
     }
-
-    // inline void fnode::erase(henfo_id const& id)
-    // {
-    //     mf_henfo().erase(id);
-    // }
 
     template<typename T>
     inline void fnode::erase()
@@ -565,7 +517,7 @@ namespace fspace // fnode
 
     inline fnode fnode::mf_clone()
     {
-        fspace::fnode l_clon(id(), type());
+        fspace::fnode l_clon(id());
 
         l_clon << ~deref();
 
@@ -581,11 +533,6 @@ namespace fspace // fnode
     {
         return mf_find<fnode>(id, mf_children());
     }
-
-    // inline henfo& fnode::mf_find(henfo_id const& id) const
-    // {
-    //     return mf_find<henfo>(id, mf_henfo());
-    // }
 
     inline henfo& fnode::mf_find(std::string const& id) const
     {
@@ -623,7 +570,6 @@ namespace fspace // fnode
     // accessor declarations
     M_accessor_impl(fnode, mf_father, m_father, fnode)
     M_accessor_impl(fnode, mf_ref, m_ref, fnode)
-    M_accessor_impl(type_id, mf_type, m_type, fnode)
     M_accessor_impl(fnode_id, mf_id, m_id, fnode)
     M_accessor_impl(henfo_map, mf_henfo, m_henfo, fnode)
     M_accessor_impl(fnode_map, mf_children, m_children, fnode)

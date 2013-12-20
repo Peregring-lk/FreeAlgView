@@ -13,11 +13,11 @@ namespace fspace // henfo
     public:
         template<typename T, class = futil::ctor_purity<henfo, T> >
         henfo(T&& t)
-            : base_tp(std::forward<T>(t)) // , m_id(t.hid())
+            : base_tp(std::forward<T>(t))
         {}
 
         henfo(henfo const& he)
-            : base_tp(static_cast<base_tp const&>(he)) //, m_id(he.m_id)
+            : base_tp(static_cast<base_tp const&>(he))
         {}
 
         henfo(futil::nil_tp = futil::nil)
@@ -36,16 +36,12 @@ namespace fspace // henfo
         {
             base_tp::operator=(he);
 
-            //  m_id = he.m_id;
-
             return *this;
         }
 
         henfo& operator=(futil::nil_tp)
         {
             base_tp::operator=(futil::nil);
-
-            // m_id = futil::nil;
 
             return *this;
         }
@@ -66,17 +62,7 @@ namespace fspace // henfo
 
             return u;
         }
-
-    public:
-        // henfo_id id() const
-        // {
-        //     return m_id;
-        // }
-
-    private:
-        //  henfo_id m_id = futil::nil;
     };
-
 }
 
 #endif // FSPACE_HENFO_HPP_INCLUDED

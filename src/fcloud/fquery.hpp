@@ -105,22 +105,6 @@ namespace fspace // fquery
         unsigned m_max;
     };
 
-    class qtype : public i_qunit
-    {
-    public:
-        qtype(type_id const& type) : m_type(type)
-        {}
-
-    private:
-        void mf_apply(fset& set) const override
-        {
-            set.filter([this](fnode const& node) -> bool
-                       { return node.type() == m_type; } );
-        }
-
-        type_id m_type;
-    };
-
     class qid : public i_qunit
     {
     public:

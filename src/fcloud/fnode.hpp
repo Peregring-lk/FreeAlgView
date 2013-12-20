@@ -50,7 +50,7 @@ namespace fspace // fnode
         fset set() const;
         fset travel() const;
 
-        type_id type() const;
+        //        type_id type() const;
         fnode_id id() const;
         unsigned nid() const;
 
@@ -69,7 +69,6 @@ namespace fspace // fnode
         unsigned order() const;
 
         fnode get(fnode_id const& id) const;
-        // henfo& get(henfo_id const& id) const;
 
         template<typename T>
         T& get() const;
@@ -83,7 +82,6 @@ namespace fspace // fnode
 
     public: // properties
         bool exists(fnode_id const& id) const;
-        // bool exists(henfo_id const& id) const;
 
         template<typename T>
         bool exists() const;
@@ -92,19 +90,16 @@ namespace fspace // fnode
         bool head() const;
         bool leaf() const;
 
-        bool typed() const;
-        bool untyped() const;
         bool identified() const;
         bool anonymous() const;
 
         bool pointer() const;
 
     public: // operators
-        // henfo& operator[](henfo_id const& id) const;
         fnode operator[](fnode_id const& id) const;
 
         template<typename T, class =
-                 futil::is_incongruent<T, fnode, fnode_id, type_id,
+                 futil::is_incongruent<T, fnode,
                                        bleach_tp, bool, int, float, char> >
         operator T&() const;
 
@@ -113,14 +108,12 @@ namespace fspace // fnode
         fnode operator->() const;
 
         template<typename T, class =
-                 futil::is_incongruent<T, fnode, fnode_id, type_id, bleach_tp> >
+                 futil::is_incongruent<T, fnode, fnode_id, bleach_tp> >
         fnode& operator<<(T&& t);
 
         fnode& operator<<(fnode he);
         fnode& operator<<(faddress he);
         fnode& operator<<(fnode_id const& id);
-        fnode& operator<<(type_id const& id);
-
         fnode& operator<<(bleach_tp const& bleacher);
 
         void operator>>(fnode he);
@@ -130,29 +123,24 @@ namespace fspace // fnode
         fset operator()(P const& p) const;
 
         bool operator==(fnode_id const& id) const;
-        bool operator==(type_id const& type) const;
         bool operator==(fnode const& he) const;
 
         bool operator!=(fnode_id const& id) const;
-        bool operator!=(type_id const& type) const;
         bool operator!=(fnode const& he) const;
 
     public: // setters
-        void type(type_id const& id);
         void id(fnode_id const& id);
         void father(fnode const& node);
         void ref(fnode const& he);
 
-        void tydentify();
-
         void add(fnode he);
 
         template<typename T, class =
-                 futil::is_incongruent<T, fnode, fnode_id, type_id, bleach_tp> >
+                 futil::is_incongruent<T, fnode, fnode_id,
+                                       faddress, bleach_tp> >
         void add(T&& t);
 
         void erase(fnode_id const& id);
-        // void erase(henfo_id const& id);
         void erase(fnode& he);
 
         template<typename T>
@@ -168,7 +156,6 @@ namespace fspace // fnode
 
     private:
         fnode mf_find(fnode_id const& id) const;
-        // henfo& mf_find(henfo_id const& id) const;
         henfo& mf_find(std::string const& id) const;
 
         template<typename R, typename ID, typename C>
@@ -180,7 +167,6 @@ namespace fspace // fnode
     private: // accessor declarations
         M_accessor_decl(fnode, mf_father)
         M_accessor_decl(fnode, mf_ref)
-        M_accessor_decl(type_id, mf_type)
         M_accessor_decl(fnode_id, mf_id)
         M_accessor_decl(henfo_map, mf_henfo)
         M_accessor_decl(fnode_map, mf_children)
@@ -188,6 +174,23 @@ namespace fspace // fnode
     };
 
     fnode fanon();
+
+    class fowner
+    {
+    protected:
+        fspace::fnode m_owner;
+
+    public:
+        fspace::fnode owner() const
+        {
+            return m_owner;
+        }
+
+        void owner(fspace::fnode n)
+        {
+            m_owner = n;
+        }
+    };
 
 } // fnode
 

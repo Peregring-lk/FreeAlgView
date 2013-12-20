@@ -5,6 +5,8 @@
 #include "faupp/faupp.hpp"
 
 // TODO: Generalizating debuggers.
+#include "debugger/debugger.hpp"
+#include "simple_debugger/simple_debugger.hpp"
 #include "graphic_debugger/graphic_debugger.hpp"
 
 namespace freealgview // FreeAlgView
@@ -22,10 +24,10 @@ namespace freealgview // FreeAlgView
         }
     };
 
-    class fauInit : fauCall, public fauFunctor<fauInit>
+    class fauInit : fauCall, public fspace::fowner
     {
     public:
-        bool operator()() override;
+        bool operator()();
     };
 
     class StackTop : fauCall
@@ -636,7 +638,7 @@ namespace freealgview // FreeAlgView
         }
     };
 
-    class Rvaluiying : fauCall
+    class Rvalueying : fauCall
     {
     public:
         bool operator()(fspace::fnode code)
@@ -684,7 +686,7 @@ namespace freealgview // FreeAlgView
         void operator()(fspace::fnode assign)
         {
             if (assign["rvalue"_f]) {
-                if (!call<Rvaluiying>(assign))
+                if (!call<Rvalueying>(assign))
                     return;
 
                 // The element stack.top() is the lvalue.
@@ -914,7 +916,7 @@ namespace freealgview // FreeAlgView
     public:
         void operator()(fspace::fnode stmnt)
         {
-            call<Rvaluiying>(stmnt);
+            call<Rvalueying>(stmnt);
         }
     };
 
@@ -973,7 +975,7 @@ namespace freealgview // FreeAlgView
 
     bool FreeAlgView::operator()()
     {
-        fspace::fnode fau = fspace::fcloud(class_id());
+        fspace::fnode fau = fspace::fcloud("FreeAlgView"_f);
 
         fau << *this;
 
@@ -988,21 +990,20 @@ namespace freealgview // FreeAlgView
     {
         // REVIEW: Faupp::class_id? Use of identifiers in general must be
         // changed.
-        fspace::fnode faupp(Faupp::class_id(), "machine"_t);
+        fspace::fnode faupp("Faupp"_f);
 
         owner() << faupp;
 
-        // FIXME: Faupp can't be moved and being copied isn't safe. bisonc++ is
-        // the culprit, and not I :P.
+        // FIXME: Faupp can't be moved and coping it is unsafe. bisonc++ is the
+        // culprit, and not me :P.
         // owner() << (faupp << Faupp(...));
         Faupp parser;
 
+        // FIXME: Parser isn't a henfo of faupp!!, but faupp is its owner.
         parser.owner(faupp);
 
         // Start-up file.
-        fauString file_name(".finit");
-
-        faupp << file_name;
+        faupp << ".finit"_fs;
 
         // TODO: Protocol about informing errors to the user.
         if (not parser()) {

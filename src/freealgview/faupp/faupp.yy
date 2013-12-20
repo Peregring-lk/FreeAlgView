@@ -27,7 +27,7 @@
 %baseclass-header .phantom-dir/faupp-parser-phantom.hpp
 %parsefun-source .phantom-dir/faupp-parser-phantom.cpp
 
-%baseclass-preinclude freealgview/faudata.hpp
+%baseclass-preinclude fcloud/fspace.hpp
 
 %stype fspace::fnode
 

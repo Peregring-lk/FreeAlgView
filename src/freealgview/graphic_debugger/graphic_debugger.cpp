@@ -43,7 +43,7 @@ namespace freealgview {
           m_mouse(m_layouter, m_viewer),
           m_scene(m_layouter, m_mouse)
     {
-        owner(fspace::fcloud(FreeAlgView::class_id()));
+        owner(fspace::fcloud("FreeAlgView"_f));
     }
 
     GraphicDebugger::~GraphicDebugger()

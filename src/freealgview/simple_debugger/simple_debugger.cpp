@@ -15,7 +15,6 @@ namespace freealgview // SimpleDebugger
 
         std::cout << std::endl
                   << "ID: " << l_owner.id() << ", "
-                  << "TYPE: " << l_owner.type()
                   << " Degree: " << l_owner.degree() << " "
                   << std::endl;
 

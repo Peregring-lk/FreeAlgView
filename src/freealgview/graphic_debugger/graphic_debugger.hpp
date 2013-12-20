@@ -29,8 +29,6 @@
 #ifndef FREEALGVIEW_GRAPHIC_DEBUGGER_HPP_INCLUDED
 #define FREEALGVIEW_GRAPHIC_DEBUGGER_HPP_INCLUDED
 
-#include "../faudata.hpp"
-
 #include "helpers/strategy.hpp"
 #include "layouter.hpp"
 

@@ -20,7 +20,6 @@
 #ifndef FREEALGVIEW_PROPS_HPP_INCLUDED
 #define FREEALGVIEW_PROPS_HPP_INCLUDED
 
-#include "../../faudata.hpp"
 #include "pos.hpp"
 
 namespace freealgview

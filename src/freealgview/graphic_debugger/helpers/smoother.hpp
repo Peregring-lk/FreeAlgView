@@ -20,7 +20,7 @@
 #ifndef FREEALGVIEW_SMOOTHER_HPP_INCLUDED
 #define FREEALGVIEW_SMOOTHER_HPP_INCLUDED
 
-#include "../../faudata.hpp"
+#include "../../../fcloud/fspace.hpp"
 
 #include "strategy.hpp"
 #include "vecxf.hpp"

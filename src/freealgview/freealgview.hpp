@@ -1,14 +1,14 @@
 #ifndef FREEALGVIEW_HPP_INCLUDED
 #define FREEALGVIEW_HPP_INCLUDED
 
-#include "faudata.hpp"
+#include "../fcloud/fspace.hpp"
 
 namespace freealgview // FreeAlgView
 {
-    class FreeAlgView : public fauFunctor<FreeAlgView>
+    class FreeAlgView : public fspace::fowner
     {
     public: //!! requests
-        bool operator()() override;
+        bool operator()();
     };
 
 } // FreeAlgView

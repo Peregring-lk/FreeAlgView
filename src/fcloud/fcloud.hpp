@@ -22,7 +22,7 @@ namespace fspace // fcloud
         auto const& l_it = l_cloud.find(id);
 
         if (l_it == l_cloud.end()) {
-            fnode l_new(id, "##!root"_t);
+            fnode l_new(id);
             l_cloud.insert(fnode_map::value_type(id, l_new));
 
             return l_new;

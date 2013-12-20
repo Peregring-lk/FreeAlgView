@@ -20,7 +20,6 @@
 #ifndef FREEALGVIEW_LAYOUTER_HPP_INCLUDED
 #define FREEALGVIEW_LAYOUTER_HPP_INCLUDED
 
-#include "../faudata.hpp"
 #include "helpers/pos.hpp"
 #include "helpers/props.hpp"
 

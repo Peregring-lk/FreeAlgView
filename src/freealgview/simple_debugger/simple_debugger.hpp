@@ -3,14 +3,14 @@
 #ifndef FREEALGVIEW_SIMPLE_DEBUGGER_HPP_INCLUDED
 #define FREEALGVIEW_SIMPLE_DEBUGGER_HPP_INCLUDED
 
-#include "../faudata.hpp"
+#include "../../fcloud/fspace.hpp"
 
 namespace freealgview // SimpleDebugger
 {
-    class SimpleDebugger : public fauFunctor<SimpleDebugger>
+    class SimpleDebugger : public fspace::fowner
     {
     public: // requests
-        bool operator()() override;
+        bool operator()();
     };
 
 } // SimpleDebugger

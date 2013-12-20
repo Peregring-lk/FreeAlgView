@@ -3,17 +3,17 @@
 #ifndef FREEALGVIEW_DEBUGGER_HPP_INCLUDED
 #define FREEALGVIEW_DEBUGGER_HPP_INCLUDED
 
-#include "../faudata.hpp"
+#include "../../fcloud/fspace.hpp"
 
 namespace freealgview // Debugger
 {
-    class Debugger : public fauFunctor<Debugger>
+    class Debugger : public fspace::fowner
     {
     private:
         static unsigned s_counter;
 
     public: // requests
-        bool operator()() override;
+        bool operator()();
 
         static std::string next_filename();
         static std::string last_filename();

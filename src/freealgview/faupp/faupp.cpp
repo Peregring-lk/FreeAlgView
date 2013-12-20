@@ -7,7 +7,7 @@
 bool Faupp::operator()()
 {
     // TODO: Search in a defined path, not in the current work directory.
-    freealgview::fauString file = owner();
+    fspace::fstring file = owner();
     std::ifstream is(file);
 
     // TODO: Check for different stream errors.
